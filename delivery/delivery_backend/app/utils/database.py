@@ -9,8 +9,8 @@ connection_pool = pooling.MySQLConnectionPool(
     pool_reset_session=True,
     host="localhost",
     database="eucomida",
-    user="user",
-    password="1234"
+    user="***",
+    password="***"
 )
 
 def get_connection():
