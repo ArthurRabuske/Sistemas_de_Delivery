@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px; /* Adicionado para compensar a navbar fixa */
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0; /* Aumentei o padding vertical */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      /* Estilo alternativo para quando a imagem não carrega */
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .hero-section {
+        background: linear-gradient(135deg, rgba(192, 18, 31, 0.1) 0%, rgba(0, 48, 73, 0.1) 100%);
+        border-radius: 20px;
+        padding: 4rem 2rem;
+        margin: 2rem 0;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(192, 18, 31, 0.05) 0%, transparent 70%);
+        z-index: 0;
+      }
+      
+      .hero-content {
+        position: relative;
+        z-index: 1;
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .hero-subtitle {
+        color: var(--secondary-color);
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+      
+      h2 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin: 3rem 0 2rem 0;
+        text-align: center;
+        position: relative;
+        padding-bottom: 1rem;
+      }
+      
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 2px;
+      }
+      
+      .restaurant-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .restaurant-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(192, 18, 31, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .restaurant-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+      
+      .restaurant-card:hover::before {
+        left: 100%;
+      }
+      
+      .restaurant-card h4 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin-bottom: 1rem;
+        font-size: 1.4rem;
+      }
+      
+      .restaurant-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 0;
+      }
+      
+      .restaurant-icon {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: white;
+        font-size: 1.2rem;
+      }
+      
+      .rating-stars {
+        color: #ffc107;
+        margin-bottom: 1rem;
+      }
+      
+      .rating-badge {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.3rem 0.8rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      
+      .culinaria-badge {
+        background: var(--secondary-color);
+        color: white;
+        border-radius: 15px;
+        padding: 0.2rem 0.6rem;
+        font-size: 0.7rem;
+        display: inline-block;
+        margin-bottom: 0.5rem;
+      }
+      
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+      }
+      
+      .feature-item {
+        text-align: center;
+        padding: 2rem 1rem;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        transition: transform 0.3s ease;
+      }
+      
+      .feature-item:hover {
+        transform: translateY(-5px);
+      }
+      
+      .feature-icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+      
+      .feature-item h5 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .feature-item p {
+        color: #666;
+        font-size: 0.9rem;
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 4rem;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        color: #666;
+      }
+      
+      .empty-state i {
+        font-size: 4rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px; /* Ajuste para mobile */
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px; /* Logo menor em mobile */
+        }
+        
+        h1 {
+          font-size: 2.5rem;
+        }
+        
+        .hero-section {
+          padding: 2rem 1rem;
+        }
+        
+        .restaurant-card {
+          padding: 1.5rem;
+        }
+        
+        .feature-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        <div class="ms-auto">
+          <a href="{{ url_for('home.login_register') }}" class="btn btn-accent">
+            <i class="fas fa-user-circle me-2"></i>Login / Cadastro
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- Hero Section -->
+      <section class="hero-section">
+        <div class="hero-content">
+          <h1>Descubra Sabores Incríveis</h1>
+          <p class="hero-subtitle">Os melhores restaurantes da cidade, entregues na sua porta</p>
+          <a href="{{ url_for('home.login_register') }}" class="btn btn-accent btn-lg">
+            <i class="fas fa-utensils me-2"></i>Começar a Pedir
+          </a>
+        </div>
+      </section>
+
+      <!-- Features Grid -->
+      <div class="feature-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-shipping-fast"></i>
+          </div>
+          <h5>Entrega Rápida</h5>
+          <p>Entregamos em até 30 minutos na sua região</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-utensils"></i>
+          </div>
+          <h5>Variedade</h5>
+          <p>Diversos restaurantes e tipos de culinária</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <h5>Qualidade Garantida</h5>
+          <p>Pratos selecionados e bem avaliados</p>
+        </div>
+      </div>
+
+      <!-- Restaurants Section -->
+      <h2>Restaurantes em Destaque</h2>
+      
+      <div id="restaurant-list">
+        {% if restaurantes %}
+          <div class="row">
+            {% for restaurante in restaurantes %}
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="restaurant-card">
+                <div class="restaurant-icon">
+                  <i class="fas fa-utensils"></i>
+                </div>
+                
+                {% if restaurante.tipo_culinaria %}
+                <span class="culinaria-badge">{{ restaurante.tipo_culinaria }}</span>
+                {% endif %}
+                
+                <h4>{{ restaurante.nome }}</h4>
+                
+                <!-- Avaliação -->
+                <div class="rating-stars">
+                  <span class="rating-badge">
+                    <i class="fas fa-star"></i>
+                    {% if restaurante.media_avaliacao and restaurante.media_avaliacao > 0 %}
+                      {{ "%.1f"|format(restaurante.media_avaliacao) }}
+                    {% else %}
+                      Novo
+                    {% endif %}
+                    {% if restaurante.total_avaliacoes and restaurante.total_avaliacoes > 0 %}
+                      <small>({{ restaurante.total_avaliacoes }} avaliações)</small>
+                    {% endif %}
+                  </span>
+                </div>
+                
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class="fas fa-store-slash"></i>
+            <h4>Nenhum restaurante disponível</h4>
+            <p>Em breve teremos estabelecimentos incríveis para você!</p>
+          </div>
+        {% endif %}
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+        <p class="mb-0">
+          <i class="fas fa-heart text-danger mx-1"></i>
+          Feito com amor para amantes da boa comida
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        // Verifica se a imagem carregou com sucesso
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+        
+        // Efeito de animação nos cards
+        const restaurantCards = document.querySelectorAll('.restaurant-card');
+        restaurantCards.forEach((card, index) => {
+          card.style.animationDelay = `${index * 0.1}s`;
+        });
+      });
+    </script>
+  </body>
+</html>

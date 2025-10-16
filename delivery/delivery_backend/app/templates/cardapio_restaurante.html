@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - {{ restaurante.nome }}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      h1 {
+        color: white;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+      
+      h2 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 2px;
+      }
+      
+      .restaurant-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(192, 18, 31, 0.3);
+        margin-bottom: 2rem;
+        border: none;
+      }
+      
+      .restaurant-header .card-body {
+        padding: 2rem;
+      }
+      
+      .badge-custom {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 20px;
+        padding: 0.5rem 1rem;
+        font-weight: 500;
+        font-size: 0.9rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+      
+      .rating-stars {
+        color: #ffc107;
+      }
+      
+      /* NOVO LAYOUT PARA PRODUTOS - LINHA HORIZONTAL */
+      .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+      }
+      
+      .product-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        background: white;
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-color);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .product-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(247, 127, 0, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+      
+      .product-card:hover::before {
+        left: 100%;
+      }
+      
+      .product-card .card-body {
+        padding: 1.5rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .product-card .card-title {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+        font-size: 1.2rem;
+        line-height: 1.3;
+      }
+      
+      .product-card .card-text {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        flex: 1;
+      }
+      
+      .price-tag {
+        color: var(--primary-color);
+        font-weight: 700;
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+      }
+      
+      .availability-badge {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        font-size: 0.8rem;
+        display: inline-block;
+        margin-bottom: 1rem;
+      }
+      
+      /* NOVO LAYOUT PARA QUANTIDADE E BOTÃO */
+      .product-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: auto;
+      }
+      
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 0.5rem;
+        border: 2px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+      
+      .quantity-selector:focus-within {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .quantity-btn {
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-weight: bold;
+        font-size: 1.2rem;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s ease;
+      }
+      
+      .quantity-btn:hover {
+        background: var(--primary-color);
+        color: white;
+      }
+      
+      .quantity-input {
+        border: none;
+        background: none;
+        width: 40px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--secondary-color);
+      }
+      
+      .quantity-input:focus {
+        outline: none;
+      }
+
+      /* REMOVE AS SETINHAS DO INPUT NUMBER */
+      .quantity-input::-webkit-outer-spin-button,
+      .quantity-input::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+      }
+
+      .quantity-input {
+          -moz-appearance: textfield; /* Firefox */
+      }
+      
+      .btn-add-cart {
+        flex: 1;
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      
+      .btn-add-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .review-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 1rem;
+        padding: 1.5rem;
+      }
+      
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+      }
+      
+      .review-rating {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.3rem 0.7rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
+      
+      .alert-custom {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 5px solid #28a745;
+      }
+      
+      .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 5px solid #ffc107;
+      }
+      
+      .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border-left: 5px solid #17a2b8;
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      .toast-custom {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .restaurant-header .card-body {
+          padding: 1.5rem;
+        }
+        
+        .products-grid {
+          grid-template-columns: 1fr;
+          gap: 1rem;
+        }
+        
+        .product-actions {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        
+        .quantity-selector {
+          width: 100%;
+          justify-content: space-between;
+        }
+        
+        .btn-add-cart {
+          width: 100%;
+        }
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('consumidor.dashboard_consumidor') }}">
+              <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <!-- Cabeçalho do Restaurante -->
+      <div class="restaurant-header">
+        <div class="card-body">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h1 class="mb-3">{{ restaurante.nome }}</h1>
+              {% if restaurante.tipo_culinaria %}
+                <span class="badge-custom me-2">{{ restaurante.tipo_culinaria }}</span>
+              {% endif %}
+              
+              <div class="mt-3">
+                {% if restaurante.avaliacao_media %}
+                  <span class="rating-stars fs-4">
+                    <i class="fas fa-star"></i> {{ "%.1f"|format(restaurante.avaliacao_media) }}
+                  </span>
+                  <small class="text-white-50 ms-2">
+                    ({{ restaurante.total_avaliacoes }} avaliações)
+                  </small>
+                {% else %}
+                  <span class="text-white-50">Sem avaliações</span>
+                {% endif %}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show">
+              <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %} me-2"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Cardápio -->
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            <i class="fas fa-utensils me-2"></i>
+            Cardápio
+          </h2>
+
+          {% if produtos %}
+            <div class="products-grid">
+              {% for produto in produtos %}
+              <div class="product-card">
+                <div class="card-body">
+                  <h5 class="card-title">{{ produto.nome }}</h5>
+                  <p class="card-text">{{ produto.descricao or 'Descrição não disponível' }}</p>
+                  
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="price-tag">R$ {{ "%.2f"|format(produto.preco) }}</span>
+                    <span class="availability-badge">Disponível</span>
+                  </div>
+                  
+                  <!-- NOVO LAYOUT PARA QUANTIDADE E BOTÃO -->
+                  <form method="POST" action="{{ url_for('consumidor.adicionar_carrinho', produto_id=produto.id) }}" class="product-form">
+                    <div class="product-actions">
+                      <div class="quantity-selector">
+                        <button type="button" class="quantity-btn minus" onclick="decrementQuantity(this)">-</button>
+                        <input type="number" name="quantidade" value="1" min="1" max="10" 
+                               class="quantity-input" readonly>
+                        <button type="button" class="quantity-btn plus" onclick="incrementQuantity(this)">+</button>
+                      </div>
+                      <button type="submit" class="btn-add-cart">
+                        <i class="fas fa-cart-plus"></i>
+                        <span>Adicionar</span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="alert alert-info text-center py-5">
+              <i class="fas fa-utensils fa-3x mb-3" style="color: var(--primary-color);"></i>
+              <h4>Cardápio Vazio</h4>
+              <p class="mb-0">Este restaurante ainda não possui produtos cadastrados.</p>
+            </div>
+          {% endif %}
+
+          <!-- Avaliações -->
+          {% if avaliacoes %}
+          <h2 class="mt-5">
+            <i class="fas fa-comments me-2 text-warning"></i>
+            Avaliações
+          </h2>
+          <div class="row">
+            {% for avaliacao in avaliacoes %}
+            <div class="col-12 mb-3">
+              <div class="review-card">
+                <div class="review-header">
+                  <div>
+                    <strong>{{ avaliacao.nome_consumidor }}</strong>
+                    <span class="review-rating ms-2">
+                      <i class="fas fa-star"></i> {{ "%.1f"|format(avaliacao.nota) }}
+                    </span>
+                  </div>
+                  <small class="text-muted">
+                    {% if avaliacao.data_hora %}
+                      {{ avaliacao.data_hora.strftime('%d/%m/%Y') }}
+                    {% endif %}
+                  </small>
+                </div>
+                <p class="card-text mb-0">{{ avaliacao.feedback }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+      <div class="container">
+        <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+        <p class="mb-0">
+          <i class="fas fa-heart text-danger mx-1"></i>
+          Feito com amor para amantes da boa comida
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        if (!logoImg || logoImg.complete && logoImg.naturalHeight === 0) {
+          if (logoFallback) logoFallback.style.display = 'flex';
+        }
+        
+        if (logoImg) {
+          logoImg.addEventListener('error', function() {
+            if (logoFallback) logoFallback.style.display = 'flex';
+          });
+        }
+      });
+
+      // Funções para controle de quantidade
+      function incrementQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue < 10) {
+          input.value = currentValue + 1;
+        }
+      }
+      
+      function decrementQuantity(button) {
+        const input = button.parentElement.querySelector('.quantity-input');
+        const currentValue = parseInt(input.value);
+        if (currentValue > 1) {
+          input.value = currentValue - 1;
+        }
+      }
+
+      // Função para mostrar mensagem de sucesso
+      function mostrarMensagemSucesso() {
+        const toast = document.createElement('div');
+        toast.className = 'toast-custom alert alert-success alert-dismissible fade show';
+        toast.innerHTML = `
+          <i class="fas fa-check-circle me-2"></i>
+          Produto adicionado ao carrinho com sucesso!
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(toast);
+        
+        // Remover após 3 segundos
+        setTimeout(() => {
+          if (toast.parentNode) {
+            toast.remove();
+          }
+        }, 3000);
+      }
+
+      // Adicionar evento de submit aos formulários
+      document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.product-form');
+        forms.forEach(form => {
+          form.addEventListener('submit', function(e) {
+            // Validação básica
+            const quantidade = this.querySelector('input[name="quantidade"]');
+            if (quantidade && parseInt(quantidade.value) < 1) {
+              e.preventDefault();
+              alert('A quantidade deve ser pelo menos 1');
+              return;
+            }
+            
+            // Mostrar mensagem de sucesso
+            mostrarMensagemSucesso();
+          });
+        });
+      });
+    </script>
+    
+    <!-- Incluir o carrinho lateral -->
+    {% include 'partials/carrinho_lateral.html' %}
+</body>
+</html>

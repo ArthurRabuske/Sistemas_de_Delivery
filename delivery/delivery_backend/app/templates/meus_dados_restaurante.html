@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - Meus Dados</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .page-subtitle {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+      
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px);
+      }
+      
+      .data-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .data-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(192, 18, 31, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .data-card:hover::before {
+        left: 100%;
+      }
+      
+      .data-card h5 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      
+      .data-card h5 i {
+        color: var(--primary-color);
+      }
+      
+      .address-card, .contact-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        background: white;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-color);
+      }
+      
+      .address-card:hover, .contact-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h6 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .alert-custom {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .data-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('restaurante.dashboard_produtos') }}">
+              <i class="fas fa-home me-1"></i> Dashboard
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <main class="container mt-4">
+        <div class="mb-5">
+          <h1>
+            <i class="fas fa-store me-2"></i>
+            Meus Dados - {{ restaurante.nome_restaurante }}
+          </h1>
+          <p class="page-subtitle">Gerencie as informações do seu restaurante</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="row">
+          <!-- Informações do Restaurante -->
+          <div class="col-lg-4">
+            <div class="data-card">
+              <h5><i class="fas fa-info-circle"></i> Informações do Restaurante</h5>
+              {% if restaurante %}
+                <p><strong>Nome:</strong> {{ restaurante.nome_restaurante }}</p>
+                <p><strong>Tipo de Culinária:</strong> {{ restaurante.tipo_culinaria or 'Não informado' }}</p>
+                <p><strong>Avaliação:</strong> 
+                  {% if restaurante.avaliacao %}
+                    <span class="text-warning">
+                      <i class="fas fa-star"></i> {{ "%.1f"|format(restaurante.avaliacao) }}
+                    </span>
+                  {% else %}
+                    <span class="text-muted">Sem avaliações</span>
+                  {% endif %}
+                </p>
+              {% else %}
+                <p class="text-muted">Informações não encontradas</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <!-- Endereços -->
+            <div class="data-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Endereços</h5>
+                <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalEndereco">
+                  <i class="fas fa-plus me-1"></i> Novo Endereço
+                </button>
+              </div>
+              
+              {% if enderecos %}
+                <div class="row">
+                  {% for endereco in enderecos %}
+                  <div class="col-md-6 mb-3">
+                    <div class="address-card">
+                      <h6>{{ endereco.logradouro }}, {{ endereco.numero }}</h6>
+                      <p class="small mb-3">
+                        {% if endereco.complemento %}{{ endereco.complemento }}<br>{% endif %}
+                        {{ endereco.bairro }}<br>
+                        {{ endereco.cidade }} - {{ endereco.estado }}<br>
+                        CEP: {{ endereco.cep }}
+                      </p>
+                      <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-custom" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEndereco"
+                                data-id="{{ endereco.id }}"
+                                data-logradouro="{{ endereco.logradouro }}"
+                                data-numero="{{ endereco.numero }}"
+                                data-complemento="{{ endereco.complemento or '' }}"
+                                data-bairro="{{ endereco.bairro }}"
+                                data-cidade="{{ endereco.cidade }}"
+                                data-estado="{{ endereco.estado }}"
+                                data-pais="{{ endereco.pais }}"
+                                data-cep="{{ endereco.cep }}">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <a href="{{ url_for('restaurante.excluir_endereco_restaurante', endereco_id=endereco.id) }}" 
+                          class="btn btn-outline-danger btn-sm"
+                          onclick="return confirm('Tem certeza que deseja excluir este endereço?')">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty-state">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <h6>Nenhum endereço cadastrado</h6>
+                  <p class="mb-0">Adicione os endereços do seu restaurante</p>
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Contatos -->
+            <div class="data-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0"><i class="fas fa-phone"></i> Contatos</h5>
+                <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalContato">
+                  <i class="fas fa-plus me-1"></i> Novo Contato
+                </button>
+              </div>
+              
+              {% if contatos %}
+                <div class="row">
+                  {% for contato in contatos %}
+                  <div class="col-md-6 mb-3">
+                    <div class="contact-card">
+                      <h6>{{ contato.numero }}</h6>
+                      <p class="small mb-3">
+                        <span class="badge bg-secondary">{{ contato.tipo|title }}</span>
+                      </p>
+                      <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-custom" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalContato"
+                                data-id="{{ contato.id }}"
+                                data-numero="{{ contato.numero }}"
+                                data-tipo="{{ contato.tipo }}">
+                          <i class="fas fa-edit"></i>
+                        </button>
+                        <a href="{{ url_for('restaurante.excluir_contato_restaurante', contato_id=contato.id) }}" 
+                          class="btn btn-outline-danger btn-sm"
+                          onclick="return confirm('Tem certeza que deseja excluir este contato?')">
+                          <i class="fas fa-trash"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="empty-state">
+                  <i class="fas fa-phone-slash"></i>
+                  <h6>Nenhum contato cadastrado</h6>
+                  <p class="mb-0">Adicione os contatos do seu restaurante</p>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+          <p class="mb-0">
+            <i class="fas fa-heart text-danger mx-1"></i>
+            Feito com amor para amantes da boa comida
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal Endereço -->
+    <div class="modal fade" id="modalEndereco" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%); color: white;">
+            <h5 class="modal-title" id="modalEnderecoTitle">Adicionar Endereço</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="formEndereco" method="POST">
+            <div class="modal-body">
+              <input type="hidden" name="endereco_id" id="enderecoId">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="mb-3">
+                    <label for="logradouro" class="form-label">Logradouro</label>
+                    <input type="text" class="form-control" id="logradouro" name="logradouro" required 
+                           placeholder="Rua, Avenida, etc.">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label for="numero" class="form-label">Número</label>
+                    <input type="text" class="form-control" id="numeroEndereco" name="numero" required>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="complemento" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="complemento" name="complemento" 
+                       placeholder="Apartamento, Bloco, etc.">
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="bairro" class="form-label">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="bairro" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="cidade" class="form-label">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" name="cidade" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estado" name="estado" required 
+                           placeholder="SP" maxlength="2">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="cep" class="form-label">CEP</label>
+                    <input type="text" class="form-control" id="cep" name="cep" required 
+                           placeholder="00000-000">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="pais" class="form-label">País</label>
+                <input type="text" class="form-control" id="pais" name="pais" value="Brasil" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-accent">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Contato -->
+    <div class="modal fade" id="modalContato" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%); color: white;">
+            <h5 class="modal-title" id="modalContatoTitle">Adicionar Contato</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="formContato" method="POST">
+            <div class="modal-body">
+              <input type="hidden" name="contato_id" id="contatoId">
+              <div class="mb-3">
+                <label for="numero" class="form-label">Número</label>
+                <input type="text" class="form-control" id="numero" name="numero" required 
+                       placeholder="(11) 99999-9999">
+              </div>
+              <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                  <option value="">Selecione...</option>
+                  <option value="celular">Celular</option>
+                  <option value="residencial">Residencial</option>
+                  <option value="comercial">Comercial</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-accent">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+
+        // Endereço Modal
+        const modalEndereco = document.getElementById('modalEndereco');
+        modalEndereco.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget;
+          const modalTitle = modalEndereco.querySelector('.modal-title');
+          const form = modalEndereco.querySelector('form');
+          
+          if (button.getAttribute('data-id')) {
+            modalTitle.textContent = 'Editar Endereço';
+            form.action = "{{ url_for('restaurante.editar_endereco_restaurante', endereco_id='') }}" + button.getAttribute('data-id');
+            document.getElementById('enderecoId').value = button.getAttribute('data-id');
+            document.getElementById('logradouro').value = button.getAttribute('data-logradouro');
+            document.getElementById('numeroEndereco').value = button.getAttribute('data-numero');
+            document.getElementById('complemento').value = button.getAttribute('data-complemento') || '';
+            document.getElementById('bairro').value = button.getAttribute('data-bairro');
+            document.getElementById('cidade').value = button.getAttribute('data-cidade');
+            document.getElementById('estado').value = button.getAttribute('data-estado');
+            document.getElementById('pais').value = button.getAttribute('data-pais');
+            document.getElementById('cep').value = button.getAttribute('data-cep');
+          } else {
+            modalTitle.textContent = 'Adicionar Endereço';
+            form.action = "{{ url_for('restaurante.adicionar_endereco_restaurante') }}";
+            form.reset();
+            document.getElementById('pais').value = 'Brasil';
+          }
+        });
+
+        // Contato Modal
+        const modalContato = document.getElementById('modalContato');
+        modalContato.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget;
+          const modalTitle = modalContato.querySelector('.modal-title');
+          const form = modalContato.querySelector('form');
+          
+          if (button.getAttribute('data-id')) {
+            modalTitle.textContent = 'Editar Contato';
+            form.action = "{{ url_for('restaurante.editar_contato_restaurante', contato_id='') }}" + button.getAttribute('data-id');
+            document.getElementById('contatoId').value = button.getAttribute('data-id');
+            document.getElementById('numero').value = button.getAttribute('data-numero');
+            document.getElementById('tipo').value = button.getAttribute('data-tipo');
+          } else {
+            modalTitle.textContent = 'Adicionar Contato';
+            form.action = "{{ url_for('restaurante.adicionar_contato_restaurante') }}";
+            form.reset();
+          }
+        });
+
+        // Máscaras
+        document.getElementById('cep')?.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length > 5) {
+            value = value.substring(0,5) + '-' + value.substring(5,8);
+          }
+          e.target.value = value;
+        });
+
+        document.getElementById('numero')?.addEventListener('input', function(e) {
+          let input = e.target;
+          let value = input.value.replace(/\D/g, '');
+          value = value.substring(0, 11);
+          
+          if (value.length <= 10) {
+            if (value.length > 0) {
+              if (value.length > 9) {
+                value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+              }
+            }
+          } else {
+            if (value.length > 10) {
+              value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+            }
+          }
+          
+          input.value = value;
+        });
+      });
+    </script>
+</body>
+</html>

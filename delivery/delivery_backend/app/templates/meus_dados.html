@@ -1,0 +1,1061 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - Meus Dados</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .page-subtitle {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+      
+      /* Layout corrigido */
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px);
+      }
+      
+      .data-section {
+        flex: 1;
+      }
+      
+      .data-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+        min-height: auto;
+        height: auto;
+      }
+      
+      .data-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(192, 18, 31, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .data-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+      
+      .data-card:hover::before {
+        left: 100%;
+      }
+      
+      .data-card h5 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      
+      .data-card h5 i {
+        color: var(--primary-color);
+      }
+      
+      .data-card p {
+        color: #666;
+        line-height: 1.6;
+        margin-bottom: 0.75rem;
+      }
+      
+      .data-card strong {
+        color: var(--secondary-color);
+      }
+      
+      .badge-custom {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        font-size: 0.75rem;
+      }
+      
+      .badge-visa {
+        background: linear-gradient(135deg, #1a1f71 0%, #2a2f89 100%);
+      }
+      
+      .badge-mastercard {
+        background: linear-gradient(135deg, #eb001b 0%, #f79e1b 100%);
+      }
+      
+      .badge-amex {
+        background: linear-gradient(135deg, #2e77bc 0%, #4a90e2 100%);
+      }
+      
+      .badge-elo {
+        background: linear-gradient(135deg, #00a4e0 0%, #00c4ff 100%);
+      }
+      
+      .badge-hipercard {
+        background: linear-gradient(135deg, #d42d2d 0%, #ff4d4d 100%);
+      }
+      
+      .table-custom {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 0;
+      }
+      
+      .table-custom thead th {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        padding: 1rem;
+      }
+      
+      .table-custom tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #f0f0f0;
+      }
+      
+      .address-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        background: white;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-color);
+        height: auto;
+      }
+      
+      .card-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        background: white;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+        border-left: 4px solid #28a745;
+        height: auto;
+        position: relative;
+      }
+      
+      .card-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60px;
+        height: 40px;
+        background: linear-gradient(45deg, rgba(255,255,255,0.1), rgba(255,255,255,0.2));
+        border-radius: 0 10px 0 10px;
+      }
+      
+      .address-card:hover, .card-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+      }
+      
+      .address-card h6, .card-card h6 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+      }
+      
+      .address-card p, .card-card p {
+        color: #666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h6 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .alert-custom {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 5px solid #28a745;
+      }
+      
+      .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 5px solid #ffc107;
+      }
+      
+      .alert-danger {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
+        border-left: 5px solid #dc3545;
+      }
+      
+      .modal-header-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+      
+      .modal-content {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      /* Layout responsivo corrigido */
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .data-card {
+          padding: 1.5rem;
+        }
+        
+        .address-card, .card-card {
+          padding: 1.25rem;
+        }
+        
+        .table-responsive {
+          margin-bottom: 1rem;
+        }
+      }
+      
+      /* Garantir que os cards tenham altura automática */
+      .personal-info-card {
+        min-height: 300px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .contacts-card,
+      .addresses-card,
+      .cards-card {
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .card-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .table-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .card-icon {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        opacity: 0.8;
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('consumidor.dashboard_consumidor') }}">
+              <i class="fas fa-home me-1"></i> Início
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <main class="container data-section">
+        <div class="mb-5">
+          <h1>
+            <i class="fas fa-user-circle me-2"></i>
+            Meus Dados
+          </h1>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <!-- Informações Pessoais -->
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="data-card personal-info-card">
+              <h5><i class="fas fa-id-card"></i> Informações Pessoais</h5>
+              <div class="card-content">
+                {% if consumidor %}
+                  <p><strong>Nome:</strong> {{ consumidor.nome }} {{ consumidor.sobrenome }}</p>
+                  <p><strong>CPF:</strong> {{ consumidor.cpf }}</p>
+                  <p><strong>Email:</strong> {{ current_user.email }}</p>
+                {% else %}
+                  <p class="text-muted">Informações não encontradas</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-8">
+            <!-- Contatos -->
+            <div class="data-card contacts-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0"><i class="fas fa-phone"></i> Contatos</h5>
+                <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalContato">
+                  <i class="fas fa-plus me-1"></i> Novo Contato
+                </button>
+              </div>
+              
+              <div class="card-content">
+                {% if contatos %}
+                  <div class="table-container">
+                    <div class="table-responsive">
+                      <table class="table table-custom">
+                        <thead>
+                          <tr>
+                            <th>Número</th>
+                            <th>Tipo</th>
+                            <th width="120">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for contato in contatos %}
+                          <tr>
+                            <td>{{ contato.numero }}</td>
+                            <td>
+                              <span class="badge-custom">{{ contato.tipo }}</span>
+                            </td>
+                            <td>
+                              <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-custom" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalContato"
+                                        data-id="{{ contato.id }}"
+                                        data-numero="{{ contato.numero }}"
+                                        data-tipo="{{ contato.tipo }}">
+                                  <i class="fas fa-edit"></i>
+                                </button>
+                                <a href="{{ url_for('consumidor.excluir_contato', contato_id=contato.id) }}" 
+                                  class="btn btn-outline-danger btn-sm"
+                                  onclick="return confirm('Tem certeza que deseja excluir este contato?')">
+                                  <i class="fas fa-trash"></i>
+                                </a>
+                              </div>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                {% else %}
+                  <div class="empty-state">
+                    <i class="fas fa-phone-slash"></i>
+                    <h6>Nenhum contato cadastrado</h6>
+                    <p class="mb-0">Adicione seus números de telefone para facilitar as entregas</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Endereços -->
+            <div class="data-card addresses-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> Endereços</h5>
+                <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalEndereco">
+                  <i class="fas fa-plus me-1"></i> Novo Endereço
+                </button>
+              </div>
+              
+              <div class="card-content">
+                {% if enderecos %}
+                  <div class="row">
+                    {% for endereco in enderecos %}
+                    <div class="col-md-6 mb-3">
+                      <div class="address-card">
+                        <h6>{{ endereco.logradouro }}, {{ endereco.numero }}</h6>
+                        <p class="small mb-3">
+                          {% if endereco.complemento %}{{ endereco.complemento }}<br>{% endif %}
+                          {{ endereco.bairro }}<br>
+                          {{ endereco.cidade }} - {{ endereco.estado }}<br>
+                          CEP: {{ endereco.cep }}
+                        </p>
+                        <div class="btn-group btn-group-sm">
+                          <button class="btn btn-outline-custom" 
+                                  data-bs-toggle="modal" 
+                                  data-bs-target="#modalEndereco"
+                                  data-id="{{ endereco.id }}"
+                                  data-logradouro="{{ endereco.logradouro }}"
+                                  data-numero="{{ endereco.numero }}"
+                                  data-complemento="{{ endereco.complemento or '' }}"
+                                  data-bairro="{{ endereco.bairro }}"
+                                  data-cidade="{{ endereco.cidade }}"
+                                  data-estado="{{ endereco.estado }}"
+                                  data-pais="{{ endereco.pais }}"
+                                  data-cep="{{ endereco.cep }}">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <a href="{{ url_for('consumidor.excluir_endereco', endereco_id=endereco.id) }}" 
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('Tem certeza que deseja excluir este endereço?')">
+                            <i class="fas fa-trash"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="empty-state">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h6>Nenhum endereço cadastrado</h6>
+                    <p class="mb-0">Adicione seus endereços para receber pedidos em casa</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Cartões de Crédito -->
+            <div class="data-card cards-card">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="mb-0"><i class="fas fa-credit-card"></i> Cartões de Crédito</h5>
+                <button class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalCartao">
+                  <i class="fas fa-plus me-1"></i> Novo Cartão
+                </button>
+              </div>
+              
+              <div class="card-content">
+                {% if cartoes %}
+                  <div class="row">
+                    {% for cartao in cartoes %}
+                    <div class="col-md-6 mb-3">
+                      <div class="card-card">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                          <h6>
+                            <i class="fas fa-credit-card card-icon"></i>
+                            {{ cartao.titular }}
+                          </h6>
+                          <span class="badge-custom badge-{{ cartao.bandeira|lower|replace(' ', '-') }}">
+                            {{ cartao.bandeira }}
+                          </span>
+                        </div>
+                        <p class="small mb-3">
+                          <i class="fas fa-calendar-alt me-1"></i>Validade: {{ cartao.data_validade[:7] if cartao.data_validade|length > 7 else cartao.data_validade }}<br>
+                          <small class="text-muted">
+                            <i class="fas fa-shield-alt me-1"></i>Token: {{ cartao.token[:8] }}••••
+                          </small>
+                        </p>
+                        <div class="btn-group btn-group-sm">
+                          <a href="{{ url_for('consumidor.excluir_cartao', cartao_id=cartao.id) }}" 
+                            class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('Tem certeza que deseja excluir este cartão?')">
+                            <i class="fas fa-trash"></i> Excluir
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="empty-state">
+                    <i class="fas fa-credit-card"></i>
+                    <h6>Nenhum cartão cadastrado</h6>
+                    <p class="mb-0">Adicione seus cartões para pagamentos rápidos e seguros</p>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+          <p class="mb-0">
+            <i class="fas fa-heart text-danger mx-1"></i>
+            Feito com amor para amantes da boa comida
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Modais -->
+    <!-- Modal Contato -->
+    <div class="modal fade" id="modalContato" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title" id="modalContatoTitle">Adicionar Contato</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="formContato" method="POST">
+            <div class="modal-body">
+              <input type="hidden" name="contato_id" id="contatoId">
+              <div class="mb-3">
+                <label for="numero" class="form-label">Número</label>
+                <input type="text" class="form-control" id="numero" name="numero" required 
+                       placeholder="(11) 99999-9999">
+              </div>
+              <div class="mb-3">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select class="form-select" id="tipo" name="tipo" required>
+                  <option value="">Selecione...</option>
+                  <option value="celular">Celular</option>
+                  <option value="residencial">Residencial</option>
+                  <option value="comercial">Comercial</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-accent">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Endereço -->
+    <div class="modal fade" id="modalEndereco" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title" id="modalEnderecoTitle">Adicionar Endereço</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="formEndereco" method="POST">
+            <div class="modal-body">
+              <input type="hidden" name="endereco_id" id="enderecoId">
+              <div class="row">
+                <div class="col-md-8">
+                  <div class="mb-3">
+                    <label for="logradouro" class="form-label">Logradouro</label>
+                    <input type="text" class="form-control" id="logradouro" name="logradouro" required 
+                           placeholder="Rua, Avenida, etc.">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="mb-3">
+                    <label for="numero" class="form-label">Número</label>
+                    <input type="text" class="form-control" id="numeroEndereco" name="numero" required>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="complemento" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="complemento" name="complemento" 
+                       placeholder="Apartamento, Bloco, etc.">
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="bairro" class="form-label">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="bairro" required>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="cidade" class="form-label">Cidade</label>
+                    <input type="text" class="form-control" id="cidade" name="cidade" required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <input type="text" class="form-control" id="estado" name="estado" required 
+                           placeholder="SP" maxlength="2">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="cep" class="form-label">CEP</label>
+                    <input type="text" class="form-control" id="cep" name="cep" required 
+                           placeholder="00000-000">
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="pais" class="form-label">País</label>
+                <input type="text" class="form-control" id="pais" name="pais" value="Brasil" required>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-accent">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Cartão -->
+    <div class="modal fade" id="modalCartao" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header modal-header-custom">
+            <h5 class="modal-title">Adicionar Cartão</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <form id="formCartao" method="POST" action="{{ url_for('consumidor.adicionar_cartao') }}">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="titular" class="form-label">Nome do Titular</label>
+                <input type="text" class="form-control" id="titular" name="titular" required 
+                       placeholder="Como está no cartão" maxlength="100">
+              </div>
+              
+              <div class="mb-3">
+                <label for="bandeira" class="form-label">Bandeira</label>
+                <select class="form-select" id="bandeira" name="bandeira" required>
+                  <option value="">Selecione...</option>
+                  <option value="Visa">Visa</option>
+                  <option value="Mastercard">Mastercard</option>
+                  <option value="American Express">American Express</option>
+                  <option value="Elo">Elo</option>
+                  <option value="Hipercard">Hipercard</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="numero_cartao" class="form-label">Número do Cartão</label>
+                <input type="text" class="form-control" id="numero_cartao" name="numero_cartao" 
+                       placeholder="0000 0000 0000 0000" maxlength="19" oninput="formatarNumeroCartao(this)">
+                <small class="text-muted">Apenas para identificação visual</small>
+              </div>
+              
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="data_validade" class="form-label">Data de Validade</label>
+                    <input type="text" class="form-control" id="data_validade" name="data_validade" required
+                           placeholder="MM/AA" maxlength="5" oninput="formatarDataValidade(this)">
+                    <small class="text-muted">Formato: MM/AA (ex: 07/29)</small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="mb-3">
+                    <label for="cvv" class="form-label">CVV</label>
+                    <input type="text" class="form-control" id="cvv" name="cvv" 
+                           placeholder="000" maxlength="4" pattern="[0-9]{3,4}">
+                    <small class="text-muted">3 ou 4 dígitos</small>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-accent">Salvar Cartão</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+      });
+
+      // Contato Modal
+      const modalContato = document.getElementById('modalContato');
+      modalContato.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const modalTitle = modalContato.querySelector('.modal-title');
+        const form = modalContato.querySelector('form');
+        
+        if (button.getAttribute('data-id')) {
+          modalTitle.textContent = 'Editar Contato';
+          form.action = "{{ url_for('consumidor.editar_contato', contato_id='') }}" + button.getAttribute('data-id');
+          document.getElementById('contatoId').value = button.getAttribute('data-id');
+          document.getElementById('numero').value = button.getAttribute('data-numero');
+          document.getElementById('tipo').value = button.getAttribute('data-tipo');
+        } else {
+          modalTitle.textContent = 'Adicionar Contato';
+          form.action = "{{ url_for('consumidor.adicionar_contato') }}";
+          form.reset();
+        }
+      });
+
+      // Endereço Modal
+      const modalEndereco = document.getElementById('modalEndereco');
+      modalEndereco.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const modalTitle = modalEndereco.querySelector('.modal-title');
+        const form = modalEndereco.querySelector('form');
+        
+        if (button.getAttribute('data-id')) {
+          modalTitle.textContent = 'Editar Endereço';
+          form.action = "{{ url_for('consumidor.editar_endereco', endereco_id='') }}" + button.getAttribute('data-id');
+          document.getElementById('enderecoId').value = button.getAttribute('data-id');
+          document.getElementById('logradouro').value = button.getAttribute('data-logradouro');
+          document.getElementById('numeroEndereco').value = button.getAttribute('data-numero');
+          document.getElementById('complemento').value = button.getAttribute('data-complemento') || '';
+          document.getElementById('bairro').value = button.getAttribute('data-bairro');
+          document.getElementById('cidade').value = button.getAttribute('data-cidade');
+          document.getElementById('estado').value = button.getAttribute('data-estado');
+          document.getElementById('pais').value = button.getAttribute('data-pais');
+          document.getElementById('cep').value = button.getAttribute('data-cep');
+        } else {
+          modalTitle.textContent = 'Adicionar Endereço';
+          form.action = "{{ url_for('consumidor.adicionar_endereco') }}";
+          form.reset();
+          document.getElementById('pais').value = 'Brasil';
+        }
+      });
+
+      // Máscaras
+      document.getElementById('cep')?.addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 5) {
+          value = value.substring(0,5) + '-' + value.substring(5,8);
+        }
+        e.target.value = value;
+      });
+
+        // Máscara para telefone
+        document.getElementById('numero')?.addEventListener('input', function(e) {
+            let input = e.target;
+            let value = input.value.replace(/\D/g, '');
+            
+            // Limitar a 11 dígitos (máximo para celular brasileiro)
+            value = value.substring(0, 11);
+            
+            // Aplicar máscara baseada no tamanho
+            if (value.length <= 10) {
+                // Formato para telefone fixo: (11) 3333-4444
+                if (value.length > 0) {
+                    if (value.length > 9) {
+                        value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
+                    }
+                }
+            } else {
+                // Formato para celular: (11) 99999-9999
+                if (value.length > 10) {
+                    value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+                }
+            }
+            
+            input.value = value;
+        });
+
+      // Formatação do número do cartão
+      function formatarNumeroCartao(input) {
+        let value = input.value.replace(/\D/g, '');
+        let formattedValue = '';
+        
+        for (let i = 0; i < value.length; i++) {
+          if (i > 0 && i % 4 === 0) {
+            formattedValue += ' ';
+          }
+          formattedValue += value[i];
+        }
+        
+        input.value = formattedValue.substring(0, 19);
+      }
+
+      // Formatação da data de validade (MM/AA)
+      function formatarDataValidade(input) {
+        let value = input.value.replace(/\D/g, '');
+        
+        if (value.length > 2) {
+          value = value.substring(0,2) + '/' + value.substring(2,4);
+        }
+        
+        input.value = value.substring(0, 5);
+        
+        // Validação básica
+        if (value.length === 5) {
+          const mes = parseInt(value.substring(0,2));
+          const ano = parseInt(value.substring(3,5));
+          
+          if (mes < 1 || mes > 12) {
+            input.setCustomValidity('Mês inválido. Use de 01 a 12.');
+          } else {
+            input.setCustomValidity('');
+          }
+        }
+      }
+
+      // Detectar bandeira do cartão pelo número
+      function detectarBandeira(numero) {
+        const num = numero.replace(/\D/g, '');
+        
+        if (/^4/.test(num)) return 'Visa';
+        if (/^5[1-5]/.test(num)) return 'Mastercard';
+        if (/^3[47]/.test(num)) return 'American Express';
+        if (/^6(?:011|5)/.test(num)) return 'Discover';
+        if (/^3(?:0[0-5]|[68])/.test(num)) return 'Diners Club';
+        if (/^(?:2131|1800|35\d{3})/.test(num)) return 'JCB';
+        if (/^636368|^438935|^504175|^451416|^636297|^5067|^4576|^4011/.test(num)) return 'Elo';
+        
+        return '';
+      }
+
+      // Atualizar bandeira automaticamente
+      document.getElementById('numero_cartao')?.addEventListener('input', function(e) {
+        const bandeira = detectarBandeira(e.target.value);
+        if (bandeira) {
+          document.getElementById('bandeira').value = bandeira;
+        }
+      });
+
+      // Validação do CVV
+      document.getElementById('cvv')?.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/\D/g, '').substring(0, 4);
+      });
+
+      // Validação do nome do titular (apenas letras e espaços)
+      document.getElementById('titular')?.addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+      });
+
+      // Reset do modal de cartão quando abrir
+      document.getElementById('modalCartao').addEventListener('show.bs.modal', function() {
+        document.getElementById('formCartao').reset();
+      });
+    </script>
+</body>
+</html>

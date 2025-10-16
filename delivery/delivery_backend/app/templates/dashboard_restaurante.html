@@ -1,0 +1,851 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - {{ nome_restaurante }}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .restaurante-info {
+        color: white;
+        margin-right: 1rem;
+        text-align: right;
+      }
+
+      .restaurante-info .nome {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .restaurante-info .culinaria {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      h2 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 2px;
+      }
+      
+      .stats-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        padding: 2rem;
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+      }
+      
+      .stats-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(192, 18, 31, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .stats-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+      
+      .stats-card:hover::before {
+        left: 100%;
+      }
+      
+      .stats-card h5 {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+      }
+      
+      .stats-card h2 {
+        color: var(--primary-color);
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin: 1rem 0;
+      }
+      
+      .stats-card .icon {
+        font-size: 2.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+      }
+      
+      .rating-stars {
+        color: #ffc107;
+      }
+      
+      .review-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 1rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+      }
+      
+      .review-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+      }
+      
+      .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+      }
+      
+      .review-rating {
+        background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.3rem 0.7rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+      }
+      
+      .table-custom {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+      }
+      
+      .table-custom thead th {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border: none;
+        font-weight: 600;
+        padding: 1rem;
+      }
+      
+      .table-custom tbody td {
+        padding: 1rem;
+        vertical-align: middle;
+        border-color: #f0f0f0;
+      }
+      
+      .badge-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.8rem;
+      }
+      
+      .product-form-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--accent-color);
+      }
+      
+      .product-form-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        border: none;
+        padding: 1.5rem;
+      }
+      
+      .product-form-header h4 {
+        margin: 0;
+        font-weight: 700;
+      }
+      
+      .product-form-body {
+        padding: 2rem;
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h4 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .alert-custom {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 5px solid #28a745;
+      }
+      
+      .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 5px solid #ffc107;
+      }
+      
+      .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border-left: 5px solid #17a2b8;
+      }
+      
+      .modal-header-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+      
+      .modal-content {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .stats-card {
+          padding: 1.5rem;
+        }
+        
+        .product-form-body {
+          padding: 1.5rem;
+        }
+
+        .restaurante-info {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('restaurante.dados_restaurante') }}">
+              <i class="fas fa-cog me-1"></i> Meus Dados
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('restaurante.horarios_atendimento') }}">
+              <i class="fas fa-clock me-1"></i> Horários
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mt-4">
+      <!-- Cabeçalho e Botão Atualizar -->
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <h1>{{ nome_restaurante }}</h1>
+            <a href="{{ url_for('restaurante.dashboard_produtos') }}" class="btn btn-outline-custom">
+              <i class="fas fa-sync-alt me-2"></i> Atualizar Dados
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo das Avaliações -->
+      <div class="row mb-5">
+        <div class="col-md-4">
+          <div class="stats-card text-center">
+            <div class="icon">
+              <i class="fas fa-star"></i>
+            </div>
+            <h5>Avaliação Média</h5>
+            <h2>
+              {% if stats_avaliacoes and stats_avaliacoes.media_avaliacoes %}
+                {{ "%.1f"|format(stats_avaliacoes.media_avaliacoes) }}
+              {% else %}
+                0.0
+              {% endif %}
+            </h2>
+            <p class="text-muted">
+              {% if stats_avaliacoes and stats_avaliacoes.total_avaliacoes %}
+                {{ stats_avaliacoes.total_avaliacoes }} avaliações
+              {% else %}
+                0 avaliações
+              {% endif %}
+            </p>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="stats-card text-center">
+            <div class="icon">
+              <i class="fas fa-shopping-bag"></i>
+            </div>
+            <h5>Total de Pedidos</h5>
+            <h2>
+              {% if pedidos %}
+                {{ pedidos|length }}
+              {% else %}
+                0
+              {% endif %}
+            </h2>
+            <p class="text-muted">Pedidos recebidos</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4">
+          <div class="stats-card text-center">
+            <div class="icon">
+              <i class="fas fa-utensils"></i>
+            </div>
+            <h5>Produtos Ativos</h5>
+            <h2>
+              {% if produtos %}
+                {{ produtos|selectattr("stats", "equalto", "ativo")|list|length }}
+              {% else %}
+                0
+              {% endif %}
+            </h2>
+            <p class="text-muted">Produtos no cardápio</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Avaliações -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2>
+            <i class="fas fa-comments me-2"></i>
+            Avaliações dos Consumidores
+          </h2>
+
+          {% if avaliacoes and avaliacoes|length > 0 %}
+            <div class="row">
+              {% for avaliacao in avaliacoes %}
+              <div class="col-md-6 col-lg-4 mb-3">
+                <div class="review-card">
+                  <div class="review-header">
+                    <div>
+                      <strong>{{ avaliacao.nome_consumidor }}</strong>
+                      <span class="review-rating ms-2">
+                        <i class="fas fa-star"></i> {{ "%.1f"|format(avaliacao.nota) }}
+                      </span>
+                    </div>
+                    <small class="text-muted">
+                      {% if avaliacao.data_hora %}
+                        {{ avaliacao.data_hora.strftime('%d/%m/%Y %H:%M') }}
+                      {% else %}
+                        Data não disponível
+                      {% endif %}
+                    </small>
+                  </div>
+                  <p class="card-text mb-0">{{ avaliacao.feedback }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-comments"></i>
+              <h4>Nenhuma avaliação recebida ainda.</h4>
+              <p class="mb-0">As avaliações dos seus clientes aparecerão aqui.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Seção de Pedidos -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2>
+            <i class="fas fa-list-alt me-2"></i>
+            Pedidos Recebidos
+          </h2>
+
+          {% if pedidos and pedidos|length > 0 %}
+          <div class="table-responsive">
+            <table class="table table-custom">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Consumidor</th>
+                  <th>Data/Hora</th>
+                  <th>Status</th>
+                  <th>Valor Total</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ pedido.nome_consumidor }}</td>
+                  <td>
+                    {% if pedido.data_hora %}
+                      {{ pedido.data_hora.strftime('%d/%m/%Y %H:%M') }}
+                    {% else %}
+                      Data não disponível
+                    {% endif %}
+                  </td>
+                  <td>
+                    <span class="badge-status 
+                      {% if pedido.stats == 'entregue' %}bg-success
+                      {% elif pedido.stats == 'cancelado' %}bg-danger
+                      {% elif pedido.stats == 'pendente' %}bg-secondary
+                      {% elif pedido.stats == 'confirmado' %}bg-info
+                      {% elif pedido.stats == 'preparando' %}bg-warning text-dark
+                      {% elif pedido.stats == 'em rota' %}bg-primary
+                      {% else %}bg-secondary{% endif %}">
+                      {{ pedido.stats }}
+                    </span>
+                  </td>
+                  <td>R$ {{ "%.2f"|format(pedido.valor_total) if pedido.valor_total else '0.00' }}</td>
+                  <td>
+                    <button type="button" class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalStatus{{ loop.index }}">
+                      <i class="fas fa-edit me-1"></i> Alterar Status
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Modal para alterar status -->
+                <div class="modal fade" id="modalStatus{{ loop.index }}" tabindex="-1">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header modal-header-custom">
+                        <h5 class="modal-title">Alterar Status do Pedido</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p><strong>Consumidor:</strong> {{ pedido.nome_consumidor }}</p>
+                        <p><strong>Status atual:</strong> 
+                          <span class="badge-status 
+                            {% if pedido.stats == 'entregue' %}bg-success
+                            {% elif pedido.stats == 'cancelado' %}bg-danger
+                            {% elif pedido.stats == 'pendente' %}bg-secondary
+                            {% elif pedido.stats == 'confirmado' %}bg-info
+                            {% elif pedido.stats == 'preparando' %}bg-warning text-dark
+                            {% elif pedido.stats == 'em rota' %}bg-primary
+                            {% else %}bg-secondary{% endif %}">
+                            {{ pedido.stats }}
+                          </span>
+                        </p>
+                        <form method="POST">
+                          <input type="hidden" name="pedido_id" value="{{ pedido.id }}">
+                          <div class="mb-3">
+                            <label for="novo_status{{ loop.index }}" class="form-label">Novo Status:</label>
+                            <select class="form-select" id="novo_status{{ loop.index }}" name="novo_status" required>
+                              <option value="pendente" {% if pedido.stats == 'pendente' %}selected{% endif %}>Pendente</option>
+                              <option value="confirmado" {% if pedido.stats == 'confirmado' %}selected{% endif %}>Confirmado</option>
+                              <option value="preparando" {% if pedido.stats == 'preparando' %}selected{% endif %}>Preparando</option>
+                              <option value="em rota" {% if pedido.stats == 'em rota' %}selected{% endif %}>Em Rota</option>
+                              <option value="entregue" {% if pedido.stats == 'entregue' %}selected{% endif %}>Entregue</option>
+                              <option value="cancelado" {% if pedido.stats == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                            </select>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-accent">Atualizar Status</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-list-alt"></i>
+              <h4>Nenhum pedido recebido ainda.</h4>
+              <p class="mb-0">Os pedidos dos seus clientes aparecerão aqui.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Seção de Produtos -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <h2>
+            <i class="fas fa-utensils me-2"></i>
+            Produtos Cadastrados
+          </h2>
+
+          {% if produtos and produtos|length > 0 %}
+          <div class="table-responsive">
+            <table class="table table-custom">
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Descrição</th>
+                  <th>Preço</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for produto in produtos %}
+                <tr>
+                  <td>{{ produto.nome }}</td>
+                  <td>{{ produto.descricao }}</td>
+                  <td>R$ {{ "%.2f"|format(produto.preco) if produto.preco else '0.00' }}</td>
+                  <td>
+                    <span class="badge-status {% if produto.stats == 'ativo' %}bg-success{% else %}bg-danger{% endif %}">
+                      {{ produto.stats }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="btn-group" role="group">
+                      <a href="{{ url_for('restaurante.dashboard_produtos', editar=produto.id) }}" 
+                         class="btn btn-accent btn-sm">
+                        <i class="fas fa-edit me-1"></i> Editar
+                      </a>
+                      <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalExcluir{{ loop.index }}">
+                        <i class="fas fa-trash me-1"></i> Excluir
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Modal de confirmação para excluir -->
+                <div class="modal fade" id="modalExcluir{{ loop.index }}" tabindex="-1">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header modal-header-custom">
+                        <h5 class="modal-title">Confirmar Exclusão</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <p>Tem certeza que deseja excluir o produto <strong>"{{ produto.nome }}"</strong>?</p>
+                        <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <a href="{{ url_for('restaurante.dashboard_produtos', excluir=produto.id) }}" class="btn btn-danger">
+                          <i class="fas fa-trash me-1"></i> Excluir
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-utensils"></i>
+              <h4>Nenhum produto cadastrado ainda.</h4>
+              <p class="mb-0">Adicione produtos ao seu cardápio usando o formulário abaixo.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Formulário de Cadastro/Edição de Produto -->
+      <div class="row">
+        <div class="col-md-8 mx-auto">
+          <div class="product-form-card">
+            <div class="product-form-header">
+              <h4 class="mb-0">
+                <i class="fas {% if produto_editar %}fa-edit{% else %}fa-plus-circle{% endif %} me-2"></i>
+                {% if produto_editar %}Editar Produto{% else %}Cadastrar Novo Produto{% endif %}
+              </h4>
+            </div>
+            <div class="product-form-body">
+              {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show" role="alert">
+                      <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+                      {{ message }}
+                      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                  {% endfor %}
+                {% endif %}
+              {% endwith %}
+
+              <form action="{{ url_for('restaurante.dashboard_produtos') }}" method="post">
+                {% if produto_editar %}
+                  <input type="hidden" name="produto_id" value="{{ produto_editar.id }}">
+                  <div class="mb-3">
+                    <a href="{{ url_for('restaurante.dashboard_produtos') }}" class="btn btn-secondary btn-sm">
+                      <i class="fas fa-arrow-left me-1"></i> Voltar para Cadastro
+                    </a>
+                  </div>
+                {% endif %}
+
+                <div class="mb-3">
+                  <label for="nome" class="form-label">Nome do Produto</label>
+                  <input type="text" class="form-control" id="nome" name="nome" 
+                         value="{{ produto_editar.nome if produto_editar else '' }}" required>
+                </div>
+
+                <div class="mb-3">
+                  <label for="descricao" class="form-label">Descrição</label>
+                  <textarea class="form-control" id="descricao" name="descricao" rows="3" required>{{ produto_editar.descricao if produto_editar else '' }}</textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="preco" class="form-label">Preço (R$)</label>
+                  <div class="input-group">
+                    <span class="input-group-text">R$</span>
+                    <input type="number" step="0.01" min="0.01" class="form-control" id="preco" name="preco" 
+                           value="{{ produto_editar.preco if produto_editar else '' }}" required>
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="status" class="form-label">Status</label>
+                  <select class="form-select" id="status" name="status" required>
+                    <option value="ativo" {% if produto_editar and produto_editar.stats == 'ativo' %}selected{% elif not produto_editar %}selected{% endif %}>Ativo</option>
+                    <option value="inativo" {% if produto_editar and produto_editar.stats == 'inativo' %}selected{% endif %}>Inativo</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100 py-2">
+                  <i class="fas fa-save me-2"></i>
+                  {% if produto_editar %}Atualizar Produto{% else %}Cadastrar Produto{% endif %}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-5">
+      <div class="container text-center">
+        <p>&copy; 2025 euComida - Dashboard do Restaurante</p>
+        <p class="mb-0">
+          <i class="fas fa-heart text-danger mx-1"></i>
+          Feito com amor para amantes da boa comida
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

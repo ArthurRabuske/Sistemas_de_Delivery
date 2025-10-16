@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registro de Consumidor - euComida</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .register-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--primary-color);
+        position: relative;
+        overflow: hidden;
+      }
+      
+      .register-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(192, 18, 31, 0.05), transparent);
+        transition: left 0.5s ease;
+      }
+      
+      .register-card:hover::before {
+        left: 100%;
+      }
+      
+      .register-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        border: none;
+        padding: 1.5rem;
+      }
+      
+      .register-header h2 {
+        margin: 0;
+        font-weight: 700;
+        text-align: center;
+      }
+      
+      .register-body {
+        padding: 2rem;
+      }
+      
+      h3 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      
+      h3::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 2px;
+      }
+      
+      .form-control {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 0.75rem 1rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .form-label {
+        color: var(--secondary-color);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+      
+      .form-section {
+        margin-bottom: 2.5rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #f0f0f0;
+      }
+      
+      .form-section:last-of-type {
+        border-bottom: none;
+        margin-bottom: 1rem;
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        .register-body {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary" href="{{ url_for('home.index') }}">
+              <i class="fas fa-home me-1"></i>Voltar ao Início
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container mt-4 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="register-card">
+                    <div class="register-header">
+                        <h2>Cadastro - Consumidor</h2>
+                    </div>
+                    <div class="register-body">
+                        <form method="POST">
+                            <!-- Informações Pessoais -->
+                            <div class="form-section">
+                                <h3>Informações Pessoais</h3>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Nome</label>
+                                            <input type="text" class="form-control" name="nome" placeholder="Seu nome" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Sobrenome</label>
+                                            <input type="text" class="form-control" name="sobrenome" placeholder="Seu sobrenome" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">CPF</label>
+                                            <input type="text" class="form-control" name="cpf" placeholder="000.000.000-00" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Telefone</label>
+                                            <input type="text" class="form-control" name="telefone" placeholder="(11) 99999-9999" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" placeholder="seu@email.com" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Senha</label>
+                                            <input type="password" class="form-control" name="senha" placeholder="Crie uma senha segura" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Endereço -->
+                            <div class="form-section">
+                                <h3>Endereço</h3>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label class="form-label">Logradouro</label>
+                                            <input type="text" class="form-control" name="logradouro" placeholder="Rua, Avenida, etc." required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Número</label>
+                                            <input type="number" class="form-control" name="numero" placeholder="Nº" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Complemento</label>
+                                            <input type="text" class="form-control" name="complemento" placeholder="Apartamento, Bloco, etc.">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label class="form-label">Bairro</label>
+                                            <input type="text" class="form-control" name="bairro" placeholder="Nome do bairro" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Cidade</label>
+                                            <input type="text" class="form-control" name="cidade" placeholder="Nome da cidade" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Estado</label>
+                                            <input type="text" class="form-control" name="estado" placeholder="SP" maxlength="2" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">País</label>
+                                            <input type="text" class="form-control" name="pais" value="Brasil" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">CEP</label>
+                                            <input type="text" class="form-control" name="cep" placeholder="00000-000">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-accent btn-lg py-3">
+                                    <i class="fas fa-user-plus me-2"></i>Cadastrar Consumidor
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container">
+        <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+        <p class="mb-0">
+          <i class="fas fa-heart text-danger mx-1"></i>
+          Feito com amor para amantes da boa comida
+        </p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        // Verifica se a imagem carregou com sucesso
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+
+        // Máscara para CPF - CORRIGIDA
+        const cpfInput = document.querySelector('input[name="cpf"]');
+        if (cpfInput) {
+          cpfInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length <= 3) {
+              value = value;
+            } else if (value.length <= 6) {
+              value = value.substring(0,3) + '.' + value.substring(3,6);
+            } else if (value.length <= 9) {
+              value = value.substring(0,3) + '.' + value.substring(3,6) + '.' + value.substring(6,9);
+            } else {
+              value = value.substring(0,3) + '.' + value.substring(3,6) + '.' + value.substring(6,9) + '-' + value.substring(9,11);
+            }
+            
+            e.target.value = value;
+          });
+        }
+
+        // Máscara para telefone - CORRIGIDA
+        const telefoneInput = document.querySelector('input[name="telefone"]');
+        if (telefoneInput) {
+          telefoneInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length === 0) {
+              e.target.value = '';
+              return;
+            }
+            
+            if (value.length <= 2) {
+              value = '(' + value;
+            } else if (value.length <= 6) {
+              value = '(' + value.substring(0,2) + ') ' + value.substring(2);
+            } else if (value.length <= 10) {
+              value = '(' + value.substring(0,2) + ') ' + value.substring(2,6) + '-' + value.substring(6);
+            } else {
+              value = '(' + value.substring(0,2) + ') ' + value.substring(2,7) + '-' + value.substring(7,11);
+            }
+            
+            e.target.value = value;
+          });
+        }
+
+        // Máscara para CEP - CORRIGIDA
+        const cepInput = document.querySelector('input[name="cep"]');
+        if (cepInput) {
+          cepInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.length > 5) {
+              value = value.substring(0,5) + '-' + value.substring(5,8);
+            }
+            
+            e.target.value = value;
+          });
+        }
+      });
+    </script>
+</body>
+</html>

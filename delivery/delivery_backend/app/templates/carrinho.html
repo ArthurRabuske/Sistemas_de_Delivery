@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - Finalizar Pedido</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .page-subtitle {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+      
+      /* Layout corrigido */
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px);
+      }
+      
+      .cart-item-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--primary-color);
+        margin-bottom: 1.5rem;
+      }
+      
+      .cart-item-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+      
+      .summary-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid var(--accent-color);
+      }
+      
+      .summary-card .card-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border: none;
+        border-radius: 15px 15px 0 0 !important;
+        padding: 1.5rem;
+      }
+      
+      .summary-card .card-body {
+        padding: 2rem;
+      }
+      
+      .alert-custom {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #c6e9f0 100%);
+        color: #0c5460;
+        border-left: 5px solid #17a2b8;
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      /* Layout responsivo corrigido */
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .cart-item-card {
+          padding: 1.5rem;
+        }
+      }
+      
+      .badge-custom {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 500;
+        font-size: 0.75rem;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h6 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('consumidor.dashboard_consumidor') }}">
+              <i class="fas fa-arrow-left me-1"></i> Voltar
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <main class="container mt-4">
+        <div class="mb-5">
+          <h1>
+            <i class="fas fa-shopping-cart me-2"></i>
+            Finalizar Pedido
+          </h1>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% if not carrinho %}
+            <div class="empty-state">
+                <i class="fas fa-cart-arrow-down"></i>
+                <h6>Seu carrinho está vazio</h6>
+                <p class="mb-4">Adicione alguns produtos deliciosos ao seu carrinho!</p>
+                <a href="{{ url_for('consumidor.dashboard_consumidor') }}" class="btn btn-accent">
+                    <i class="fas fa-utensils me-1"></i> Ver Restaurantes
+                </a>
+            </div>
+        {% else %}
+            <div class="row">
+                <div class="col-lg-8">
+                    <h4 class="mb-4">
+                      <i class="fas fa-list me-2"></i>
+                      Itens do Pedido
+                    </h4>
+                    
+                    {% for produto_id, item in carrinho.items() %}
+                    <div class="card cart-item-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <h5 class="card-title">{{ item.nome }}</h5>
+                                    <p class="card-text text-muted mb-1">
+                                        <small>
+                                          <i class="fas fa-store me-1"></i>{{ item.restaurante_nome }}
+                                        </small>
+                                    </p>
+                                    <p class="card-text">
+                                        <strong class="text-primary" style="font-size: 1.2rem;">
+                                          R$ {{ "%.2f"|format(item.preco) }}
+                                        </strong>
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <form method="POST" action="{{ url_for('consumidor.atualizar_carrinho', produto_id=produto_id) }}">
+                                        <div class="row g-2 align-items-center">
+                                            <div class="col-4">
+                                                <label class="form-label"><strong>Quantidade:</strong></label>
+                                                <input type="number" name="quantidade" value="{{ item.quantidade }}" 
+                                                       min="1" class="form-control">
+                                            </div>
+                                            <div class="col-8">
+                                                <label class="form-label"><strong>Observações:</strong></label>
+                                                <textarea name="observacoes" class="form-control" rows="1" 
+                                                          placeholder="Ex: sem cebola...">{{ item.observacoes }}</textarea>
+                                            </div>
+                                            <div class="col-12 mt-2">
+                                                <button type="submit" name="acao" value="atualizar" class="btn btn-outline-custom btn-sm me-2">
+                                                    <i class="fas fa-sync me-1"></i> Atualizar
+                                                </button>
+                                                <button type="submit" name="acao" value="remover" class="btn btn-outline-danger btn-sm">
+                                                    <i class="fas fa-trash me-1"></i> Remover
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('consumidor.dashboard_consumidor') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-1"></i> Continuar Comprando
+                        </a>
+                        <a href="{{ url_for('consumidor.limpar_carrinho') }}" class="btn btn-outline-danger" 
+                           onclick="return confirm('Tem certeza que deseja esvaziar o carrinho?')">
+                            <i class="fas fa-trash me-1"></i> Esvaziar Carrinho
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card summary-card">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="fas fa-receipt me-2"></i> Resumo do Pedido</h5>
+                        </div>
+                        <div class="card-body">
+                            {% set primeiro_item = carrinho.values()|first %}
+                            <p><strong><i class="fas fa-store me-2"></i>Restaurante:</strong><br>{{ primeiro_item.restaurante_nome }}</p>
+                            
+                            <hr>
+                            <h4 class="text-primary">Total: R$ {{ "%.2f"|format(total) }}</h4>
+                            
+                            <form method="POST" action="{{ url_for('consumidor.finalizar_pedido') }}">
+                                <div class="mb-3">
+                                    <label class="form-label"><strong><i class="fas fa-map-marker-alt me-2"></i>Endereço de Entrega:</strong></label>
+                                    <select name="endereco_entrega" class="form-select" required>
+                                        <option value="">Selecione um endereço</option>
+                                        {% for endereco in enderecos %}
+                                        <option value="{{ endereco.id }}">
+                                            {{ endereco.logradouro }}, {{ endereco.numero }} - {{ endereco.bairro }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label"><strong><i class="fas fa-credit-card me-2"></i>Forma de Pagamento:</strong></label>
+                                    <select name="forma_pagamento" class="form-select" required>
+                                        <option value="">Selecione...</option>
+                                        <option value="cartao">Cartão de Crédito</option>
+                                        <option value="dinheiro">Dinheiro</option>
+                                        <option value="pix">PIX</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3" id="cartao-field" style="display: none;">
+                                    <label class="form-label"><strong><i class="fas fa-credit-card me-2"></i>Cartão:</strong></label>
+                                    <select name="cartao_id" class="form-select">
+                                        <option value="">Selecione um cartão</option>
+                                        {% for cartao in cartoes %}
+                                        <option value="{{ cartao.id }}">
+                                            {{ cartao.bandeira }} - {{ cartao.titular }} ({{ cartao.data_validade }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label"><strong><i class="fas fa-sticky-note me-2"></i>Observações Gerais:</strong></label>
+                                    <textarea name="observacoes_gerais" class="form-control" rows="3" 
+                                              placeholder="Alguma observação adicional para o pedido..."></textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-accent btn-lg w-100">
+                                    <i class="fas fa-check me-2"></i> Confirmar Pedido
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+          <p class="mb-0">
+            <i class="fas fa-heart text-danger mx-1"></i>
+            Feito com amor para amantes da boa comida
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+      });
+
+      // Mostrar/ocultar campo de cartão baseado na forma de pagamento
+      document.querySelector('select[name="forma_pagamento"]')?.addEventListener('change', function(e) {
+          const cartaoField = document.getElementById('cartao-field');
+          if (e.target.value === 'cartao') {
+              cartaoField.style.display = 'block';
+              cartaoField.querySelector('select').required = true;
+          } else {
+              cartaoField.style.display = 'none';
+              cartaoField.querySelector('select').required = false;
+          }
+      });
+    </script>
+</body>
+</html>

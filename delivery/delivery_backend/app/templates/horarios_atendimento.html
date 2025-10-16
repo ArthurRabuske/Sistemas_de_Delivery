@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - Horários de Atendimento</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .restaurante-info {
+        color: white;
+        margin-right: 1rem;
+        text-align: right;
+      }
+
+      .restaurante-info .nome {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.2rem;
+      }
+
+      .restaurante-info .culinaria {
+        font-size: 0.85rem;
+        opacity: 0.9;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      h2 {
+        color: var(--secondary-color);
+        font-weight: 700;
+        margin: 2rem 0 1.5rem 0;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+      
+      h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
+        border-radius: 2px;
+      }
+      
+      .product-form-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--accent-color);
+      }
+      
+      .product-form-header {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-radius: 15px 15px 0 0;
+        border: none;
+        padding: 1.5rem;
+      }
+      
+      .product-form-header h4 {
+        margin: 0;
+        font-weight: 700;
+      }
+      
+      .product-form-body {
+        padding: 2rem;
+      }
+      
+      .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .form-select:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.2rem rgba(192, 18, 31, 0.15);
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h4 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .alert-custom {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .alert-success {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
+        border-left: 5px solid #28a745;
+      }
+      
+      .alert-warning {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
+        border-left: 5px solid #ffc107;
+      }
+      
+      .alert-info {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
+        border-left: 5px solid #17a2b8;
+      }
+      
+      .modal-header-custom {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%);
+        color: white;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+      
+      .modal-content {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+
+      .horario-card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        background: white;
+        margin-bottom: 1rem;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+      }
+
+      .horario-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+      }
+
+      .horario-dia {
+        font-weight: 600;
+        color: var(--secondary-color);
+        min-width: 120px;
+      }
+
+      .horario-hora {
+        color: var(--primary-color);
+        font-weight: 500;
+      }
+      
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .product-form-body {
+          padding: 1.5rem;
+        }
+
+        .restaurante-info {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('restaurante.dashboard_produtos') }}">
+              <i class="fas fa-home me-1"></i> Dashboard
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('restaurante.dados_restaurante') }}">
+              <i class="fas fa-cog me-1"></i> Meus Dados
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="container mt-4">
+      <div class="row mb-4">
+        <div class="col-12">
+          <div class="d-flex justify-content-between align-items-center">
+            <h1>Horários de Atendimento</h1>
+            <a href="{{ url_for('restaurante.dashboard_produtos') }}" class="btn btn-outline-custom">
+              <i class="fas fa-arrow-left me-2"></i> Voltar ao Dashboard
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show" role="alert">
+              <i class="fas fa-{% if category == 'success' %}check-circle{% else %}exclamation-triangle{% endif %} me-2"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Formulário para adicionar horário -->
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <div class="product-form-card">
+            <div class="product-form-header">
+              <h4 class="mb-0">
+                <i class="fas fa-plus-circle me-2"></i>
+                Adicionar Horário
+              </h4>
+            </div>
+            <div class="product-form-body">
+              <form action="{{ url_for('restaurante.adicionar_horario') }}" method="post">
+                <div class="mb-3">
+                  <label for="dia" class="form-label">Dia da Semana</label>
+                  <select class="form-select" id="dia" name="dia" required>
+                    <option value="">Selecione um dia</option>
+                    <option value="Segunda">Segunda-feira</option>
+                    <option value="Terça">Terça-feira</option>
+                    <option value="Quarta">Quarta-feira</option>
+                    <option value="Quinta">Quinta-feira</option>
+                    <option value="Sexta">Sexta-feira</option>
+                    <option value="Sábado">Sábado</option>
+                    <option value="Domingo">Domingo</option>
+                  </select>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="hora_inicio" class="form-label">Horário de Abertura</label>
+                      <input type="time" class="form-control" id="hora_inicio" name="hora_inicio" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="hora_fim" class="form-label">Horário de Fechamento</label>
+                      <input type="time" class="form-control" id="hora_fim" name="hora_fim" required>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-accent w-100 py-2">
+                  <i class="fas fa-save me-2"></i>
+                  Adicionar Horário
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de horários cadastrados -->
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            <i class="fas fa-clock me-2"></i>
+            Horários Cadastrados
+          </h2>
+
+          {% if horarios and horarios|length > 0 %}
+            <div class="row">
+              {% for horario in horarios %}
+              <div class="col-md-6 col-lg-4 mb-3">
+                <div class="horario-card">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="horario-dia">{{ horario.dia }}</span>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarHorario{{ loop.index }}">
+                        <i class="fas fa-edit"></i>
+                      </button>
+                      <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalExcluirHorario{{ loop.index }}">
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="horario-hora">
+                    {{ horario.hora_inicio }} - {{ horario.hora_fim }}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal para editar horário -->
+              <div class="modal fade" id="modalEditarHorario{{ loop.index }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header modal-header-custom">
+                      <h5 class="modal-title">Editar Horário</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ url_for('restaurante.editar_horario', horario_id=horario.id) }}" method="post">
+                        <div class="mb-3">
+                          <label for="dia_edit{{ loop.index }}" class="form-label">Dia da Semana</label>
+                          <select class="form-select" id="dia_edit{{ loop.index }}" name="dia" required>
+                            <option value="Segunda" {% if horario.dia == 'Segunda' %}selected{% endif %}>Segunda-feira</option>
+                            <option value="Terça" {% if horario.dia == 'Terça' %}selected{% endif %}>Terça-feira</option>
+                            <option value="Quarta" {% if horario.dia == 'Quarta' %}selected{% endif %}>Quarta-feira</option>
+                            <option value="Quinta" {% if horario.dia == 'Quinta' %}selected{% endif %}>Quinta-feira</option>
+                            <option value="Sexta" {% if horario.dia == 'Sexta' %}selected{% endif %}>Sexta-feira</option>
+                            <option value="Sábado" {% if horario.dia == 'Sábado' %}selected{% endif %}>Sábado</option>
+                            <option value="Domingo" {% if horario.dia == 'Domingo' %}selected{% endif %}>Domingo</option>
+                          </select>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="hora_inicio_edit{{ loop.index }}" class="form-label">Horário de Abertura</label>
+                              <input type="time" class="form-control" id="hora_inicio_edit{{ loop.index }}" 
+                                     name="hora_inicio" value="{{ horario.hora_inicio }}" required>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="mb-3">
+                              <label for="hora_fim_edit{{ loop.index }}" class="form-label">Horário de Fechamento</label>
+                              <input type="time" class="form-control" id="hora_fim_edit{{ loop.index }}" 
+                                     name="hora_fim" value="{{ horario.hora_fim }}" required>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                          <button type="submit" class="btn btn-accent">Atualizar Horário</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal para excluir horário -->
+              <div class="modal fade" id="modalExcluirHorario{{ loop.index }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header modal-header-custom">
+                      <h5 class="modal-title">Confirmar Exclusão</h5>
+                      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p>Tem certeza que deseja excluir o horário de <strong>{{ horario.dia }}</strong>?</p>
+                      <p class="text-danger"><small>Esta ação não pode ser desfeita.</small></p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                      <a href="{{ url_for('restaurante.excluir_horario', horario_id=horario.id) }}" class="btn btn-danger">
+                        <i class="fas fa-trash me-1"></i> Excluir
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="empty-state">
+              <i class="fas fa-clock"></i>
+              <h4>Nenhum horário cadastrado.</h4>
+              <p class="mb-0">Adicione horários de atendimento usando o formulário acima.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer mt-5">
+      <div class="container text-center">
+        <p>&copy; 2025 euComida - Horários de Atendimento</p>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

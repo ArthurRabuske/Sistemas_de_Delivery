@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>euComida - Meus Pedidos</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍔</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+        --primary-color: #c1121f;
+        --secondary-color: #003049;
+        --accent-color: #f77f00;
+        --light-color: #f8f9fa;
+        --dark-color: #222;
+      }
+      
+      body {
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+        color: var(--dark-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        padding-top: 80px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      .navbar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #a00e1a 100%) !important;
+        box-shadow: 0 2px 15px rgba(192, 18, 31, 0.3);
+        padding: 1rem 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1030;
+      }
+      
+      .navbar-brand {
+        padding: 0;
+        display: flex;
+        align-items: center;
+        margin-right: 2rem;
+      }
+      
+      .logo {
+        height: 50px;
+        width: auto;
+        transition: transform 0.3s ease;
+        object-fit: contain;
+        transform: scale(2.3);
+        transform-origin: left center;
+      }
+          
+      .logo:hover {
+        transform: scale(2.4);
+      }
+      
+      .logo-fallback {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .logo-fallback i {
+        font-size: 1.8rem;
+      }
+
+      .btn-accent {
+        background: linear-gradient(135deg, var(--accent-color) 0%, #e60000 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(247, 127, 0, 0.3);
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .btn-accent:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(247, 127, 0, 0.4);
+        background: linear-gradient(135deg, #ff2600 0%, #ff2600 100%);
+        color: white;
+      }
+      
+      .btn-secondary {
+        background: linear-gradient(135deg, var(--secondary-color) 0%, #002538 100%);
+        border: none;
+        color: white;
+        font-weight: 600;
+        padding: 0.75rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 15px rgba(0, 48, 73, 0.3);
+        transition: all 0.3s ease;
+      }
+      
+      .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 48, 73, 0.4);
+        background: linear-gradient(135deg, #004466 0%, #004466 100%);
+        color: white;
+      }
+
+      .btn-outline-custom {
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      
+      .btn-outline-custom:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: translateY(-1px);
+      }
+      
+      h1 {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-weight: 800;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .page-subtitle {
+        color: var(--secondary-color);
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        font-weight: 300;
+      }
+      
+      /* Layout corrigido */
+      .main-container {
+        display: flex;
+        flex-direction: column;
+        min-height: calc(100vh - 80px);
+      }
+      
+      .order-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        border-left: 4px solid var(--accent-color);
+        margin-bottom: 1.5rem;
+      }
+      
+      .order-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+      }
+      
+      .badge-status {
+        font-size: 0.8rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+      }
+      
+      .badge-pendente {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+        color: #000;
+      }
+      
+      .badge-preparando {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        color: white;
+      }
+      
+      .badge-entregue {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        color: white;
+      }
+      
+      .badge-cancelado {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+      }
+      
+      .badge-caminho {
+        background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%);
+        color: white;
+      }
+      
+      .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        color: #666;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        margin: 1rem 0;
+      }
+      
+      .empty-state i {
+        font-size: 3rem;
+        color: #ddd;
+        margin-bottom: 1rem;
+      }
+      
+      .empty-state h6 {
+        color: var(--secondary-color);
+        margin-bottom: 0.5rem;
+      }
+      
+      .alert-custom {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 2rem;
+      }
+      
+      .footer {
+        background: var(--secondary-color);
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: auto;
+        border-radius: 20px 20px 0 0;
+      }
+      
+      /* Layout responsivo corrigido */
+      @media (max-width: 768px) {
+        body {
+          padding-top: 70px;
+        }
+        
+        .navbar-brand {
+          margin-right: 1rem;
+        }
+        
+        .logo {
+          height: 40px;
+        }
+        
+        h1 {
+          font-size: 2rem;
+        }
+        
+        .order-card {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
+          <img src="{{ url_for('static', filename='images/logo.png') }}" alt="euComida" class="logo" onerror="this.style.display='none'">
+          <div class="logo-fallback" style="display: none;">
+            <i class="fas fa-utensils"></i>
+            <span>euComida</span>
+          </div>
+        </a>
+        
+        <div class="navbar-nav ms-auto">
+          <div class="nav-item">
+            <a class="btn btn-secondary me-2" href="{{ url_for('consumidor.dashboard_consumidor') }}">
+              <i class="fas fa-home me-1"></i> Início
+            </a>
+          </div>
+          <div class="nav-item">
+            <a class="btn btn-accent" href="{{ url_for('login.logout') }}">
+              <i class="fas fa-sign-out-alt me-1"></i> Sair
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-container">
+      <main class="container mt-4">
+        <div class="mb-5">
+          <h1>
+            <i class="fas fa-history me-2"></i>
+            Meus Pedidos
+          </h1>
+          <p class="page-subtitle">Acompanhe o histórico de todos os seus pedidos</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-custom alert-dismissible fade show">
+                <i class="fas fa-{% if category == 'success' %}check-circle{% elif category == 'warning' %}exclamation-triangle{% else %}exclamation-circle{% endif %} me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        {% if pedidos %}
+          <div class="row">
+            <div class="col-12">
+              {% for pedido in pedidos %}
+              <div class="card order-card">
+                <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-md-9">
+                      <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                          <h5 class="card-title mb-1">
+                            {% if pedido.restaurante_nome %}
+                              {{ pedido.restaurante_nome }}
+                            {% else %}
+                              Restaurante
+                            {% endif %}
+                          </h5>
+                          <p class="text-muted mb-2">
+                            <small>
+                              <i class="fas fa-calendar me-1"></i>
+                              {% if pedido.data_hora %}
+                                {{ pedido.data_hora.strftime('%d/%m/%Y às %H:%M') }}
+                              {% else %}
+                                Data não disponível
+                              {% endif %}
+                            </small>
+                          </p>
+                        </div>
+                        <span class="badge-status badge-{{ pedido.status if pedido.status else 'pendente' }}">
+                          {% if pedido.status == 'pendente' %}
+                            <i class="fas fa-clock me-1"></i>Pendente
+                          {% elif pedido.status == 'preparando' %}
+                            <i class="fas fa-utensils me-1"></i>Preparando
+                          {% elif pedido.status == 'caminho' %}
+                            <i class="fas fa-motorcycle me-1"></i>Em Rota
+                          {% elif pedido.status == 'entregue' %}
+                            <i class="fas fa-check me-1"></i>Entregue
+                          {% elif pedido.status == 'cancelado' %}
+                            <i class="fas fa-times me-1"></i>Cancelado
+                          {% else %}
+                            {{ pedido.status|title if pedido.status else 'Pendente' }}
+                          {% endif %}
+                        </span>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <strong><i class="fas fa-list me-2"></i>Itens:</strong>
+                        <div class="mt-1">
+                          {% if pedido.itens %}
+                            {% for item in pedido.itens %}
+                            <span class="badge bg-light text-dark me-1 mb-1">
+                              {% if item.quantidade and item.produto_nome %}
+                                {{ item.quantidade }}x {{ item.produto_nome }}
+                                {% if item.preco %}
+                                  - R$ {{ "%.2f"|format(item.preco * item.quantidade) }}
+                                {% endif %}
+                              {% else %}
+                                {{ item }}
+                              {% endif %}
+                            </span>
+                            {% endfor %}
+                          {% else %}
+                            <span class="text-muted">Itens não disponíveis</span>
+                          {% endif %}
+                        </div>
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <p class="mb-1">
+                            <strong><i class="fas fa-money-bill-wave me-2"></i>Total:</strong>
+                            R$ {{ "%.2f"|format(pedido.valor_total) if pedido.valor_total else "0.00" }}
+                          </p>
+                        </div>
+                        <div class="col-sm-6">
+                          <p class="mb-1">
+                            <strong><i class="fas fa-credit-card me-2"></i>Pagamento:</strong>
+                            {{ (pedido.forma_pagamento|title) if pedido.forma_pagamento else 'Não informado' }}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {% if pedido.observacoes_gerais %}
+                      <div class="mt-2">
+                        <strong><i class="fas fa-sticky-note me-2"></i>Observações:</strong>
+                        <span class="text-muted">{{ pedido.observacoes_gerais }}</span>
+                      </div>
+                      {% endif %}
+                    </div>
+                    
+                    <div class="col-md-3 text-end">
+                      <div class="btn-group-vertical w-100">
+                        {% if pedido.status == 'entregue' %}
+                        <a href="{{ url_for('consumidor.avaliar_restaurante', pedido_id=pedido.id) }}" 
+                           class="btn btn-outline-success mb-2">
+                          <i class="fas fa-star me-1"></i> Avaliar Restaurante
+                        </a>
+                        {% endif %}
+                        {% if (pedido.status == 'pendente') or (not pedido.status) %}
+                        <a href="{{ url_for('consumidor.cancelar_pedido', pedido_id=pedido.id) }}" 
+                           class="btn btn-outline-danger"
+                           onclick="return confirm('Tem certeza que deseja cancelar este pedido?')">
+                          <i class="fas fa-times me-1"></i> Cancelar
+                        </a>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="empty-state">
+            <i class="fas fa-shopping-bag"></i>
+            <h6>Nenhum pedido encontrado</h6>
+            <p class="mb-4">Você ainda não realizou nenhum pedido.</p>
+            <a href="{{ url_for('consumidor.dashboard_consumidor') }}" class="btn btn-accent">
+              <i class="fas fa-utensils me-1"></i> Fazer Primeiro Pedido
+            </a>
+          </div>
+        {% endif %}
+      </main>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <p>&copy; 2025 euComida. Todos os direitos reservados.</p>
+          <p class="mb-0">
+            <i class="fas fa-heart text-danger mx-1"></i>
+            Feito com amor para amantes da boa comida
+          </p>
+        </div>
+      </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+      // Script para mostrar fallback se a logo não carregar
+      document.addEventListener('DOMContentLoaded', function() {
+        const logoImg = document.querySelector('.logo');
+        const logoFallback = document.querySelector('.logo-fallback');
+        
+        if (logoImg.complete && logoImg.naturalHeight === 0) {
+          logoFallback.style.display = 'flex';
+        }
+        
+        logoImg.addEventListener('error', function() {
+          logoFallback.style.display = 'flex';
+        });
+      });
+    </script>
+</body>
+</html>
