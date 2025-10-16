@@ -1,2 +1,2 @@
 # Sistemas_de_Delivery
-Sistema de delivery inspirado no Ifood, com Backend desenvolvido com Flask e Front-end desenvolvido com HTML, CSS, Bootstrap e Javascript. Banco de dados desenvolvido com MySQL.
+Sistema de delivery inspirado no iFood. O backend foi desenvolvido em Python utilizando o framework Flask e frontend construído com HTML, CSS, Bootstrap e JavaScript. O banco de dados utiliza MySQL para o armazenamento e gerenciamento das informações.
